@@ -15,6 +15,18 @@ unpack /filesystem/root_init /
 
 apt-get update
 
+# Disable ipv6
+sed -i 's/$/ ipv6.disable=1/' /boot/cmdline.txt
+
+# Add display requirements
+echo "hdmi_drive=1" >> /boot/config.txt
+echo "hdmi_group=2" >> /boot/config.txt
+echo "hdmi_mode=87" >> /boot/config.txt
+echo "hdmi_cvt 800 480 60 6 0 0 0" >> /boot/config.txt
+echo "dtoverlay=ads7846,cs=1,penirq=25,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150,xmin=200,xmax=3900,ymin=200,ymax=3900" >> /boot/config.txt
+
+#chmod 777 /boot/splash.png
+
 # Display a custom Splashscreen when booting the Rpi
 if [ "$FULLPAGEOS_CUSTOM_SPLASHSCREEN" == "yes" ]
 then
