@@ -25,13 +25,20 @@ echo "hdmi_mode=87" >> /boot/config.txt
 echo "hdmi_cvt 800 480 60 6 0 0 0" >> /boot/config.txt
 echo "dtoverlay=ads7846,cs=1,penirq=25,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150,xmin=200,xmax=3900,ymin=200,ymax=3900" >> /boot/config.txt
 
-#chmod 777 /boot/splash.png
+chmod 777 /boot/splash.png
+
+# Add default network data
+if [ "${USE_NETWORK_LOCAL}" == "yes" ]; then
+    DIST_NETWORK_FILE=/"/boot"/${DIST_NAME,,}-wpa-supplicant.txt
+    # allow configuring multiple wifi networks via /boot/DIST_NAME-wpa-supplicant.txt
+    mv /boot/network.local ${DIST_NETWORK_FILE}
+fi
 
 # Display a custom Splashscreen when booting the Rpi
 if [ "$FULLPAGEOS_CUSTOM_SPLASHSCREEN" == "yes" ]
 then
     apt-get install -y fbi
-    sed -i 's/$/ logo.nologo consoleblank=0 loglevel=0 quiet/' /boot/cmdline.txt
+    sed -i 's/$/ logo.nologo consoleblank=0 loglevel=1 quiet/' /boot/cmdline.txt
     echo "disable_splash=1" >> /boot/config.txt
     systemctl enable splashscreen.service
     systemctl disable getty@tty1
